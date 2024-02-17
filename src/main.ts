@@ -8,7 +8,7 @@ bootstrapApplication(AppComponent, appConfig)
   .catch((err) => console.error(err));
 
 
-const handlers = [
+export const handlers = [
   http.get('/options/:id', ({ params }) => {
 
     const options = {
