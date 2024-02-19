@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { Step2Component } from './step2/step2.component';
@@ -7,6 +7,7 @@ import { Step3Component } from './step3/step3.component';
 import { Step1Component } from './step1/step1.component';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -21,7 +22,9 @@ import { AppRoutingModule } from './app-routing.module';
     imports: [
         BrowserModule,
         FormsModule,
-        AppRoutingModule
+        ReactiveFormsModule,
+        AppRoutingModule,
+        HttpClientModule
     ]
 })
 

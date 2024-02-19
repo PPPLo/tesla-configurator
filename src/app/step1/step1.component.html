@@ -1,9 +1,37 @@
 <h4>Step 1: Choose your Model and Color</h4>
-<label>Model</label>
-<!-- <select [(ngModel)]="selectedModel">
-    <ng-container *ngFor="let model of models">
-        <option value="model.name">{{model.name}}</option>
-    </ng-container>
-</select> -->
 
-<!--<div *ngIf="models$ | async">{{models$}}</div>-->
+<div class="form">
+    <div>
+        <label>Model</label>
+        <select [formControl]="selectedModel">
+            <ng-container *ngFor="let model of models$ | async">
+                <option [value]="model.code">{{model.code}}</option>
+            </ng-container>
+        </select> 
+    </div>
+
+    <!-- <pre>{{selectedModel.value|json}}</pre>
+
+    <pre *ngIf="colors$|async as colors">{{colors | json}}</pre>
+
+    <pre *ngIf="selectedModel$|async as selectedCar">Selected Model: {{selectedCar|json}}</pre> -->
+
+    <!-- <pre *ngIf="colors$|async as colors">{{colors | json}}</pre>
+
+    <pre *ngFor="let color of colors$|async">{{color.code}}</pre> -->
+
+    <div *ngIf="selectedModel$ | async">
+    <label>Color</label>
+    <select [formControl]="selectedColor">
+        <ng-container *ngFor="let color of colors">
+            <option [value]="color.code">{{color.code}}</option>
+        </ng-container>
+    </select>  
+    </div>
+
+    <!-- <div>
+        <img [src]="selectedImageUrl$ | async">
+    </div> -->
+
+    <pre *ngIf="selectedImageUrl$|async as url">{{url}}</pre>
+</div>
