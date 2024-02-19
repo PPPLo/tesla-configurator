@@ -1,15 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {AsyncPipe, CommonModule, JsonPipe} from '@angular/common';
-import {Router, RouterModule } from '@angular/router';
-import { Step1Component } from './step1/step1.component';
+import {Router  } from '@angular/router';
 import { DataService } from './shared/data.service';
-import { BrowserModule } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [ RouterModule, AsyncPipe, JsonPipe],
-  templateUrl: './app.component.html'
+  // standalone: true,
+  // imports: [ RouterModule, AsyncPipe, JsonPipe],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+
 })
 export class AppComponent implements OnInit {
 
