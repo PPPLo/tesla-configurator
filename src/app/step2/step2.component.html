@@ -1,1 +1,25 @@
-<p>step2 works!</p>
+<h4>Step 2: Select your config and options</h4>
+
+<ng-container *ngIf="model$|async as model">
+    <label>Config</label>
+    <select [formControl]="selectedConfig" id="configSelect">
+        <ng-container *ngFor="let config of model.configs">
+            <option [value]="config.id">{{config.description}}</option>
+        </ng-container>
+    </select> 
+
+    <ng-container *ngIf="currentConfig$ | async as currentConfig">
+        <p>Range : {{currentConfig.range}} miles - Max speed: {{currentConfig.speed}} - Cost: {{currentConfig.price | currency}} </p>
+        <ng-container *ngIf="model.towHitch">
+            <label>Tow hitch?</label>
+            <input type="checkbox" [formControl]="selectedTowHitchValue">
+        </ng-container>
+        <ng-container *ngIf="model.yoke">
+            <label>Yoke steering wheel</label>
+            <input type="checkbox"  [formControl]="selectedYokeValue">
+        </ng-container>
+    </ng-container>
+
+</ng-container>
+<pre *ngIf="model$ | async as model">{{model|json}}</pre>
+<pre *ngIf="currentConfig$ | async as config"> {{config|json}}</pre>

@@ -5,19 +5,29 @@ import { DataService } from './shared/data.service';
 
 @Component({
   selector: 'app-root',
-  // standalone: true,
-  // imports: [ RouterModule, AsyncPipe, JsonPipe],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 
 })
 export class AppComponent implements OnInit {
 
-  constructor(private router:Router, private data:DataService){}
+  modelChoice:string = '';
 
-  navigateTo(route: string){
-    console.log(route);
-    this.router.navigate([route]);
+  constructor(private router:Router, private data:DataService){
+  }
+
+  navigateToStep1(){
+    this.router.navigate(['step1']);
+  }
+
+  navigateToStep2(){
+    this.modelChoice=this.data.latestModelCoice;
+    console.log('app'+ this.modelChoice);
+    this.router.navigate(['step2', this.modelChoice]);
+  }
+
+  navigateToStep3(){
+    this.router.navigate(['step3']);
   }
 
   ngOnInit(): void {

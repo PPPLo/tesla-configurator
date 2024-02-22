@@ -1,46 +1,62 @@
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Signal, WritableSignal, signal } from '@angular/core';
 import { DataService } from '../shared/data.service';
-import { EMPTY, Observable, Subscription, combineLatest, filter, find, map, startWith, switchMap, tap } from 'rxjs';
+import { EMPTY, NEVER, Observable, Subscription, catchError, combineLatest, map, switchMap, tap } from 'rxjs';
 import { CarModel, Color } from '../shared/models';
 import { FormControl } from '@angular/forms';
+import { CommunicationService } from '../shared/communication.service';
 
-
+const DEFAULT_COLOR = 'white';
 
 @Component({
   selector: 'app-step1',
-  // standalone: true,
-  // imports: [ CommonModule, AsyncPipe, JsonPipe],
-  // providers: [ ],
   templateUrl: './step1.component.html',
   styleUrl: './step1.component.scss'
 })
 
 export class Step1Component implements OnInit, OnDestroy{
 
-  selectedModel:FormControl = new FormControl('Select a model');
-  selectedColor:FormControl = new FormControl('Select a color');
+  selectedModel:FormControl = new FormControl('default',{nonNullable: true});
+  selectedColor:FormControl = new FormControl(DEFAULT_COLOR,  {nonNullable: true});
 
   selectedModel$:Observable<CarModel>;
-  selectedColor$:Observable<Color>;
-  selectedImageUrl$!:Observable<string>
+  selectedColor$!:Observable<Color>;
+  selectedImageUrl$:Observable<string>;
+
+  //selectedColor: Color;
+
   models$: Observable <CarModel[]>;
   colors$: Observable<Color[]>;
   colors!:Color[];
-  colorsSub : Subscription;
 
-  constructor(private dataService: DataService){
+  formModelSub: Subscription;
+  formColorSub: Subscription;
+  colorsSub:Subscription;
+
+  constructor(private dataService: DataService, private comService: CommunicationService){
+
     this.models$=this.dataService.models$;
     this.selectedModel$=this.selectedModel.valueChanges.pipe(switchMap((value)=>this.getSelectedModel(value)));
-    this.selectedColor$=this.selectedColor.valueChanges.pipe(switchMap((value)=>this.getSelectedColor(value)));
+    //this.selectedColor$=this.selectedColor.valueChanges.pipe(switchMap((value)=>this.getSelectedColor(value)));
     this.colors$=this.selectedModel$.pipe(map((model)=>model.colors));
-    this.colorsSub=this.colors$.subscribe((val)=>this.colors=val);
-    //this.selectedImageUrl$=combineLatest([this.selectedModel$,this.selectedColor$]).pipe(switchMap(([model,color])=>this.dataService.getImageUrl(model.code, color.code)));
-    //this.selectedImageUrl$=this.dataService.getImageUrl();
+    this.selectedImageUrl$=this.dataService.getImageUrl(this.selectedModel.valueChanges, this.selectedColor.valueChanges);
+
+    this.colorsSub=this.colors$.subscribe((colors)=>this.colors=colors);
+
+    this.formModelSub=this.selectedModel.valueChanges.subscribe((value)=>{
+        this.selectedColor.reset(); 
+        this.comService.setModel(value);
+        this.dataService.setLatestModelChoice(value);});
+
+    this.formColorSub=this.selectedColor.valueChanges.subscribe((value)=> {
+        this.selectedColor$=this.getSelectedColor(value);
+    }
+        );
+        
   }
 
   ngOnInit(): void {
-    this.selectedImageUrl$=this.dataService.getImageUrl();
+
   }
 
   getSelectedModel(modelName: string):Observable<CarModel>{
@@ -53,6 +69,9 @@ export class Step1Component implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.colorsSub.unsubscribe();
+    this.formModelSub.unsubscribe();
+    this.formModelSub.unsubscribe();
+
   }
 
 }

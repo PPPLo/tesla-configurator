@@ -9,3 +9,19 @@ export interface Color{
     "description":string;
     "price": number
 }
+
+export interface ModelConfiguration {
+    "configs": Configuration[];
+    "towHitch": boolean;
+    "yoke": boolean; 
+}
+
+export interface Configuration {
+    "id":number;
+    "description":string;
+    "range":number;
+    "speed":number;
+    "price":number;
+}
+
+

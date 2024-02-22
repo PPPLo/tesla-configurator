@@ -3,35 +3,28 @@
 <div class="form">
     <div>
         <label>Model</label>
-        <select [formControl]="selectedModel">
+        <select [formControl]="selectedModel" id="modelSelect">
+            <option value="default">Select a model</option>
             <ng-container *ngFor="let model of models$ | async">
-                <option [value]="model.code">{{model.code}}</option>
+                <option [value]="model.code">Model {{model.code}}</option>
             </ng-container>
         </select> 
     </div>
-
-    <!-- <pre>{{selectedModel.value|json}}</pre>
-
-    <pre *ngIf="colors$|async as colors">{{colors | json}}</pre>
-
-    <pre *ngIf="selectedModel$|async as selectedCar">Selected Model: {{selectedCar|json}}</pre> -->
-
-    <!-- <pre *ngIf="colors$|async as colors">{{colors | json}}</pre>
-
-    <pre *ngFor="let color of colors$|async">{{color.code}}</pre> -->
-
     <div *ngIf="selectedModel$ | async">
     <label>Color</label>
-    <select [formControl]="selectedColor">
+    <select [formControl]="selectedColor" id="colorSelect">
+            <option value="default">Select a color</option>
         <ng-container *ngFor="let color of colors">
-            <option [value]="color.code">{{color.code}}</option>
+            <option [value]="color.code">{{color.description}}</option>
         </ng-container>
     </select>  
     </div>
-
-    <!-- <div>
-        <img [src]="selectedImageUrl$ | async">
-    </div> -->
-
-    <pre *ngIf="selectedImageUrl$|async as url">{{url}}</pre>
 </div>
+
+<div *ngIf="selectedImageUrl$ | async as imageUrl">
+    <img [src]="imageUrl" alt="">
+</div>
+
+<!-- <pre *ngIf="selectedModel$|async as model">{{model|json}}</pre> -->
+<pre *ngIf="colors$|async as colors">{{colors|json}}</pre>
+<pre *ngIf="selectedColor$|async as color1">{{color1|json}}</pre>

@@ -7,7 +7,7 @@ import { Step3Component } from './step3/step3.component';
 
 export const routes: Routes = [
     {path:"step1", component:Step1Component},
-    {path:"step2", component:Step2Component},
+    {path:"step2/:id", component:Step2Component},
     {path:"step3", component:Step3Component},
     {path:"", redirectTo:'step1', pathMatch:'full'},
     {path:"**", redirectTo:'step1', pathMatch:'full'},
