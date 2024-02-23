@@ -1,5 +1,6 @@
-
-<button id="step1" (click)="navigateToStep1()" #step1>Step 1</button>
-<button id="step2" (click)="navigateToStep2()" #step2>Step 2</button>
-<button id="step3" (click)="navigateToStep3()" #step3>Step 3</button>
+<div [style.width.px]="900">
+<button id="step1" (click)="navigateTo(step1.id)" #step1>Step 1</button>
+<button id="step2" (click)="navigateTo(step2.id)" #step2 [disabled]="!step2IsEnabled">Step 2</button>
+<button id="step3" (click)="navigateTo(step3.id)" #step3 [disabled]="!step3IsEnabled">Step 3</button>
 <router-outlet></router-outlet>
+</div>

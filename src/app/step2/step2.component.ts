@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { DataService } from '../shared/data.service';
-import { Observable, switchMap, map, tap, startWith } from 'rxjs';
+import { Observable, switchMap, map, tap, startWith, Subscription } from 'rxjs';
 import { Configuration, ModelConfiguration } from '../shared/models';
-import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
+import { CommunicationService } from '../shared/communication.service';
 
 @Component({
   selector: 'app-step2',
@@ -12,18 +12,36 @@ import { FormControl } from '@angular/forms';
 })
 export class Step2Component {
 
+  selectedModel:string;
+  selectedColor:string;
+  imageUrl:string;
   model$:Observable<ModelConfiguration>;
   currentConfig$: Observable<Configuration>;
-  selectedConfig: FormControl = new FormControl('1', {nonNullable:true});
+
+  selectedConfig: FormControl = new FormControl('default', {nonNullable:true});
   selectedTowHitchValue: FormControl = new FormControl();
   selectedYokeValue: FormControl = new FormControl();
 
-  constructor(private dataService:DataService, private activatedRoute:ActivatedRoute){
-    let paramId=this.activatedRoute.snapshot.paramMap.get('id')?.toLowerCase();
-    this.model$=this.dataService.getModel(paramId!);
-    //this.currentConfig$=startWith(this.model$.pipe((map((model)=>model.configs[0]))));
-    this.currentConfig$=this.selectedConfig.valueChanges.pipe(startWith('1'), switchMap((option)=>this.model$.pipe(map((model)=>model.configs.find((config)=>config.id==option))))) as Observable<Configuration>;
-    
+  subYoke:Subscription;
+  subTowHitch:Subscription;
+  
+
+  constructor(private dataService:DataService, private comService:CommunicationService){
+    this.selectedModel=this.comService.currentState.selectedModel.code;
+    this.selectedColor=this.comService.currentState.selectedColor.code;
+    this.imageUrl=this.dataService.createImageUrl(this.selectedModel,this.selectedColor);
+    this.model$=this.dataService.getModel(this.selectedModel);
+    this.currentConfig$=this.selectedConfig.valueChanges.pipe(
+      startWith('default'), 
+      switchMap((option)=>this.findModelConfig(option)), 
+      tap((value)=>this.comService.setConfig(value))
+    );
+    this.subTowHitch=this.selectedTowHitchValue.valueChanges.subscribe((value)=>this.comService.setHitch(value));
+    this.subYoke=this.selectedYokeValue.valueChanges.subscribe((value)=>this.comService.setYoke(value));
+  }
+
+  findModelConfig(inputConfig:number):Observable<Configuration>{
+    return this.model$.pipe(map((model)=>model.configs.find((config)=>config.id==inputConfig))) as Observable<Configuration>;
   }
 
 }
