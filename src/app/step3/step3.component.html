@@ -13,11 +13,11 @@
         <td class="bold">{{currentSelection.selectedColor.description}}</td>
         <td>{{currentSelection.selectedColor.price | currency}}</td>
     </tr>
-    <tr *ngIf="currentSelection.towChoice">
+    <tr *ngIf="(currentSelection.towChoice==='true')">
         <td class="bold">Tow Hitch package</td>
         <td>{{towYokePrice | currency}}</td>
     </tr>
-    <tr *ngIf="currentSelection.yokeChoice">
+    <tr *ngIf="(currentSelection.yokeChoice==='true')">
         <td class="bold">Yoke package</td>
         <td>{{towYokePrice | currency}}</td>
     </tr>

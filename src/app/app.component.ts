@@ -19,8 +19,10 @@ export class AppComponent implements OnInit, OnDestroy {
   subStep3Status:Subscription;
 
   constructor(private router:Router, private data:DataService, private comService:CommunicationService){
-    this.subStep2Status=this.comService.observableModelStatus$.subscribe((status)=>{this.step2IsEnabled=status; console.log('step2 is enabled: ', status)});
-    this.subStep3Status=this.comService.observableConfigStatus$.subscribe((status)=>{this.step3IsEnabled=status; console.log('step 3 is enabled:', status) })
+  
+    this.subStep2Status=this.comService.observableModelStatus$.subscribe((status)=>{this.step2IsEnabled=status; /*console.log('step 2 is enabled: ', status)*/});
+    this.subStep3Status=this.comService.observableConfigStatus$.subscribe((status)=>{this.step3IsEnabled=status; /*console.log('step 3 is enabled:', status)*/});
+    this.comService.resetState();
   }
 
   navigateTo(option:string){

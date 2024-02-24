@@ -2,9 +2,11 @@
 
 <ng-container *ngIf="model$|async as model">
     <div class="form">
-        <label>Config</label>
+        <label>Config:</label>
         <select [formControl]="selectedConfig" id="configSelect">
-            <option value="default">Choose</option>
+            <ng-container *ngIf="!formWasChanged">
+                <option value="default">Choose</option>
+            </ng-container>
             <ng-container *ngFor="let config of model.configs">
                 <option [value]="config.id">{{config.description}}</option>
             </ng-container>
@@ -14,15 +16,16 @@
             <p>Range : {{currentConfig.range}} miles - Max speed: {{currentConfig.speed}} - Cost: {{currentConfig.price | currency}} </p>
             <ng-container *ngIf="model.towHitch">
                 <label>Tow hitch?</label>
-                <input type="checkbox" [formControl]="selectedTowHitchValue">
+                <input type="checkbox" [formControl]="selectedTowHitchValue" id="includeTow">
             </ng-container>
             <ng-container *ngIf="model.yoke">
                 <label>Yoke steering wheel</label>
-                <input type="checkbox"  [formControl]="selectedYokeValue">
+                <input type="checkbox"  [formControl]="selectedYokeValue" id="includeYoke">
             </ng-container>
         </ng-container>
     </div>
     <img [src]="imageUrl" alt="" width="800px" [style.padding-top.px]="20">
 </ng-container>
+
 <!-- <pre *ngIf="model$ | async as model">{{model|json}}</pre>
 <pre *ngIf="currentConfig$ | async as config"> {{config|json}}</pre> -->

@@ -24,4 +24,9 @@ export interface Configuration {
     "price":number;
 }
 
+export interface Model {
+    "code":string;
+    "description":string;
+}
+
 

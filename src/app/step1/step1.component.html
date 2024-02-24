@@ -3,16 +3,17 @@
 <div class="form">
     <div>
         <label>Model</label>
-        <select [formControl]="selectedModelControl" id="modelSelect">
-            <!-- <ng-container *ngIf="!formWasChanged"> -->
+        <select [formControl]="selectedModelControl" id="modelSelect"> 
+            <ng-container *ngIf="!formWasChanged">
                 <option value="default">Select a model</option>
-            <!-- </ng-container> -->
+            </ng-container>
             <ng-container *ngFor="let model of models$ | async">
                 <option [value]="model.code">Model {{model.code}}</option>
             </ng-container>
         </select> 
     </div>
-    <div *ngIf="selectedModel$ | async">
+    
+    <div *ngIf="selectedModel$|async">
     <label>Color</label>
     <select [formControl]="selectedColorControl" id="colorSelect">
         <ng-container *ngFor="let color of colors">
@@ -25,6 +26,7 @@
 <div *ngIf="selectedImageUrl$ | async as imageUrl">
     <img [src]="imageUrl" alt="" width="800px" [style.padding-top.px]="20">
 </div>
+
 
 <!-- <pre *ngIf="selectedModel$|async as model">{{model|json}}</pre> 
 <pre *ngIf="colors$|async as colors">{{colors|json}}</pre>

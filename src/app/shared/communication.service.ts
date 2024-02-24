@@ -1,38 +1,39 @@
 import { Injectable } from '@angular/core';
-import { CarModel, Color, Configuration } from './models';
-import { Observable, Subject, startWith } from 'rxjs';
+import { CarModel, Color, Configuration, Model } from './models';
+import { Observable, Subject } from 'rxjs';
 
-const INITIAL_STATE={  
-  selectedModel:{
-    code:'',
-    description:''
-  },
-  selectedColor:{
-    code:'',
-    description:'',
-    price:0
-  },
-  selectedConfig:{
-    id:0,
-    description:"",
-    range:0,
-    speed:0,
-    price:0,
-  },
-  towChoice:false,
-  yokeChoice:false
+export const EMPTY_MODEL:Model={
+  code:"",
+  description:""
 }
 
+export const EMPTY_COLOR={
+  code:"",
+  description:"",
+  price: 0
+}
+
+export const EMPTY_CONFIG={
+  id:0,
+  description:"",
+  range:0,
+  speed:0,
+  price:0,
+}
+const INITIAL_STATE={  
+  selectedModel:EMPTY_MODEL,
+  selectedColor:EMPTY_COLOR,
+  selectedConfig:EMPTY_CONFIG,
+  towChoice:"",
+  yokeChoice:""
+}
 
 export interface CurrentState{
-  selectedModel:{
-    code:string;
-    description:string;
-  }
+  selectedModel:Model;
   selectedColor:Color;
   selectedConfig:Configuration;
-  towChoice:boolean;
-  yokeChoice:boolean;
+  towChoice:string;
+  yokeChoice:string;
 }
 
 @Injectable({
@@ -43,39 +44,40 @@ export class CommunicationService {
 
   currentState:CurrentState = INITIAL_STATE;
   modelStatusSubject = new Subject<boolean>();
-  observableModelStatus$ : Observable<boolean> = this.modelStatusSubject.asObservable().pipe(startWith(false));
+  observableModelStatus$ : Observable<boolean> = this.modelStatusSubject.asObservable();
   configStatusSubject = new Subject <boolean>();
-  observableConfigStatus$ : Observable<boolean> =this.configStatusSubject.asObservable().pipe(startWith(false));
+  observableConfigStatus$ : Observable<boolean> =this.configStatusSubject.asObservable();
 
   constructor(){
 }
   
   setModel(model:CarModel){
-      this.resetState();
-      this.currentState.selectedModel.code=model.code;
-      this.currentState.selectedModel.description=model.description;
-      this.modelStatusSubject.next(true);
-      console.log(this.currentState);  
+    this.resetState();
+    this.currentState.selectedModel=model;
+    this.modelStatusSubject.next(true);
+    //console.log('set model:', this.currentState);  
   }
 
   setColor(color:Color){
     this.currentState.selectedColor=color;
-    console.log(this.currentState);
+    //console.log('set color', this.currentState);
   }
 
   setConfig(config:Configuration){
     this.currentState.selectedConfig = config;
+    this.currentState.towChoice="";
+    this.currentState.yokeChoice="";
     this.configStatusSubject.next(true);
-    console.log(this.currentState);
+    //console.log('set config:', this.currentState);
   }
 
   setHitch(hitchChoice:boolean){
-    this.currentState.towChoice=hitchChoice;
-    console.log(this.currentState);
+    this.currentState.towChoice=hitchChoice.toString();
+    //console.log('set setHitch', this.currentState);
   }
   setYoke(yokeChoice:boolean){
-    this.currentState.yokeChoice=yokeChoice;
-    console.log(this.currentState);
+    this.currentState.yokeChoice=yokeChoice.toString();
+    //console.log('setYoke', this.currentState);
   }
 
   getCurrentState():CurrentState{
@@ -83,8 +85,10 @@ export class CommunicationService {
   }
 
   resetState(){
-    this.currentState=INITIAL_STATE;
-    this.modelStatusSubject.next(true);
+    this.currentState=Object.assign({}, INITIAL_STATE); 
+    this.modelStatusSubject.next(false);
+    this.configStatusSubject.next(false);
+    //console.log('reset model:', this.currentState); 
   }
 
 }
